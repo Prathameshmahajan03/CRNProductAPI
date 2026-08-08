@@ -53,6 +53,11 @@ namespace API
             
             builder.Services.AddControllers();
 
+            builder.Services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+            });
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll", policy =>
@@ -130,6 +135,10 @@ namespace API
             app.UseSerilogRequestLogging();
 
             app.UseMiddleware<ExceptionMiddleware>();
+
+            app.UseMiddleware<SecurityHeadersMiddleware>();
+
+            app.UseResponseCompression();
 
             // Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())

@@ -21,6 +21,9 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Product>()
+                .HasIndex(p => p.IsActive);
         }
 
     }

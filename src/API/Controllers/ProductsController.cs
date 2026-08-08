@@ -25,14 +25,33 @@ namespace API.Controllers
         }
 
         /// <summary>
-        /// Retrieves all products.
+        /// Retrieves a paginated list of products.
         /// </summary>
-        /// <returns>A list of all products.</returns>
+        /// <param name="page">The page number. Default is 1.</param>
+        /// <param name="pageSize">The number of products per page. Default is 10.</param>
+        /// <returns>A paginated list of products.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var products = await _service.GetAllProductsAsync();
-            return Ok(products);
+            if (page < 1)
+                return BadRequest("Page must be greater than 0.");
+
+            if (pageSize < 1 || pageSize > 100)
+                return BadRequest("PageSize must be between 1 and 100.");
+
+            var (products, totalCount) =
+                await _service.GetAllProductsAsync(page, pageSize);
+
+            return Ok(new
+            {
+                page,
+                pageSize,
+                totalCount,
+                totalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+                products
+            });
         }
 
         /// <summary>

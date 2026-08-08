@@ -24,11 +24,13 @@ namespace Application.Services
         /// Retrieves all products from the repository.
         /// </summary>
         /// <returns>A collection of product response DTOs.</returns>
-        public async Task<IEnumerable<ProductResponseDto>> GetAllProductsAsync()
+        public async Task<(IEnumerable<ProductResponseDto> Products, int TotalCount)> GetAllProductsAsync(
+            int page,
+            int pageSize)
         {
-            var products = await _repository.GetAllAsync();
+            var (products, totalCount) = await _repository.GetAllAsync(page, pageSize);
 
-            return products.Select(p => new ProductResponseDto
+            var productDtos = products.Select(p => new ProductResponseDto
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -37,6 +39,8 @@ namespace Application.Services
                 StockQuantity = p.StockQuantity,
                 IsActive = p.IsActive
             });
+
+            return (productDtos, totalCount);
         }
 
         /// <summary>

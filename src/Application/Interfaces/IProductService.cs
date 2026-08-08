@@ -9,7 +9,9 @@ namespace Application.Interfaces
 {
     public interface IProductService
     {
-        Task<IEnumerable<ProductResponseDto>> GetAllProductsAsync();
+        Task<(IEnumerable<ProductResponseDto> Products, int TotalCount)> GetAllProductsAsync(
+            int page,
+            int pageSize);
 
         Task<ProductResponseDto?> GetProductByIdAsync(int id);
 

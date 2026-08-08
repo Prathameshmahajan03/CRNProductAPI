@@ -18,9 +18,8 @@ namespace CRNProductAPI.Tests
         }
 
         [Fact]
-        public async Task GetAllProductsAsync_ShouldReturnAllProducts()
+        public async Task GetAllProductsAsync_ShouldReturnPaginatedProducts()
         {
-
             // Arrange
             var products = new List<Product>
             {
@@ -45,21 +44,24 @@ namespace CRNProductAPI.Tests
                 }
             };
 
+            int page = 1;
+            int pageSize = 10;
+            int totalCount = 2;
+
             _repositoryMock
-                .Setup(r => r.GetAllAsync())
-                 .ReturnsAsync(products);
+                .Setup(r => r.GetAllAsync(page, pageSize))
+                .ReturnsAsync((products, totalCount));
 
             // Act
             var service = new ProductService(_repositoryMock.Object);
 
-            var result = await service.GetAllProductsAsync();
+            var result = await service.GetAllProductsAsync(page, pageSize);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
-
+            Assert.NotNull(result.Products);
+            Assert.Equal(2, result.Products.Count());
+            Assert.Equal(2, result.TotalCount);
         }
-
 
         [Fact]
         public async Task CreateProductAsync_ShouldCreateProductSuccessfully()
@@ -92,14 +94,11 @@ namespace CRNProductAPI.Tests
             Assert.Equal(3500, result.Price);
             Assert.Equal(15, result.StockQuantity);
             Assert.True(result.IsActive);
-
         }
-
 
         [Fact]
         public async Task GetProductByIdAsync_ShouldReturnProduct_WhenProductExists()
-        {
-
+        {  
             // Arrange
             var product = new Product
             {

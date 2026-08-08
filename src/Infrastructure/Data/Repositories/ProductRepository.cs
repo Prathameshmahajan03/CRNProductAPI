@@ -25,13 +25,22 @@ namespace Infrastructure.Data.Repositories
         /// Retrieves all products from the database.
         /// </summary>
         /// <returns>A collection of products.</returns>
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public async Task<(IEnumerable<Product> Products, int TotalCount)> GetAllAsync(
+            int page,
+            int pageSize)
         {
-            return await _context.Products
-                .AsNoTracking()
-                .ToListAsync();
-        }
+            var query = _context.Products
+                .AsNoTracking();
 
+            var totalCount = await query.CountAsync();
+
+            var products = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (products, totalCount);
+        }
         /// <summary>
         /// Retrieves a product by its unique identifier.
         /// </summary>

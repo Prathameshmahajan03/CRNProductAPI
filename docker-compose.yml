@@ -1,0 +1,23 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: crn-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD}"
+    ports:
+      - "1433:1433"
+
+  api:
+    build:
+      context: .
+      dockerfile: src/API/Dockerfile
+    container_name: crn-product-api
+    ports:
+      - "8080:8080"
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=CRNProductDB;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+      Jwt__Key: "${JWT_KEY}"
+      ASPNETCORE_URLS: "http://+:8080"
+    depends_on:
+      - sqlserver

@@ -1,0 +1,23 @@
+# Environment variables / secrets
+.env
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build output
+bin/
+obj/
+
+# Test results
+TestResults/
+
+# Logs
+Logs/
+**/Logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

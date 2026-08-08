@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36915.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{17D7B65B-2B09-4A09-83DE-11D211D3CB2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{3AD26CDE-3B34-408B-B87D-4E051484630D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{CF68D6FA-BB06-43A9-BCD3-A7466426EB49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{9290485B-3282-4B9D-B9A3-1F3D0FAD4C75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "src\API\API.csproj", "{B32A8297-FE89-426B-81A0-746E93A46E4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRNProductAPI.Tests", "tests\CRNProductAPI.Tests\CRNProductAPI.Tests.csproj", "{7598EF74-4AC4-4D19-AD11-F81D701C5603}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+		.gitignore = .gitignore
+		docker-compose.yml = docker-compose.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3AD26CDE-3B34-408B-B87D-4E051484630D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AD26CDE-3B34-408B-B87D-4E051484630D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AD26CDE-3B34-408B-B87D-4E051484630D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AD26CDE-3B34-408B-B87D-4E051484630D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF68D6FA-BB06-43A9-BCD3-A7466426EB49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF68D6FA-BB06-43A9-BCD3-A7466426EB49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF68D6FA-BB06-43A9-BCD3-A7466426EB49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF68D6FA-BB06-43A9-BCD3-A7466426EB49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9290485B-3282-4B9D-B9A3-1F3D0FAD4C75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9290485B-3282-4B9D-B9A3-1F3D0FAD4C75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9290485B-3282-4B9D-B9A3-1F3D0FAD4C75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9290485B-3282-4B9D-B9A3-1F3D0FAD4C75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B32A8297-FE89-426B-81A0-746E93A46E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B32A8297-FE89-426B-81A0-746E93A46E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B32A8297-FE89-426B-81A0-746E93A46E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B32A8297-FE89-426B-81A0-746E93A46E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7598EF74-4AC4-4D19-AD11-F81D701C5603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7598EF74-4AC4-4D19-AD11-F81D701C5603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7598EF74-4AC4-4D19-AD11-F81D701C5603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7598EF74-4AC4-4D19-AD11-F81D701C5603}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3AD26CDE-3B34-408B-B87D-4E051484630D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{CF68D6FA-BB06-43A9-BCD3-A7466426EB49} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{9290485B-3282-4B9D-B9A3-1F3D0FAD4C75} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B32A8297-FE89-426B-81A0-746E93A46E4F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{7598EF74-4AC4-4D19-AD11-F81D701C5603} = {17D7B65B-2B09-4A09-83DE-11D211D3CB2D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FC661BFC-D16F-41EA-9992-FC4DA9B721D9}
+	EndGlobalSection
+EndGlobal

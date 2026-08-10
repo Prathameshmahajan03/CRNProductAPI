@@ -15,7 +15,7 @@
             context.Response.Headers["X-Frame-Options"] = "DENY";
             context.Response.Headers["Referrer-Policy"] = "no-referrer";
             context.Response.Headers["Content-Security-Policy"] =
-                "default-src 'self';";
+            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';";
 
             await _next(context);
         }

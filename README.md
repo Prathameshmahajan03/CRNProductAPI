@@ -15,13 +15,19 @@ The project follows a layered architecture to improve maintainability, separatio
 - JWT-based authentication
 - Refresh token mechanism
 - Product CRUD operations
+- Pagination for product collection endpoints
 - Entity Framework Core with SQL Server
 - Repository and Service layer pattern
 - FluentValidation for request validation
 - Global exception handling middleware
 - Structured logging using Serilog
 - Swagger/OpenAPI documentation
+- Response compression
+- Security headers middleware
+- SQL Server indexing
 - Docker and Docker Compose support
+- Unit testing using xUnit and Moq
+- API integration testing using WebApplicationFactory
 
 
 ## Architecture
@@ -29,28 +35,56 @@ The project follows a layered architecture to improve maintainability, separatio
 The application follows a layered architecture with clear separation of responsibilities.
 
 ```text
-CRN Product API
+CRNProductAPI
 │
-├── API
-│   ├── Controllers
-│   ├── Middleware
-│   ├── Filters
-│   └── Program.cs
+├── src
+│   │
+│   ├── API
+│   │   ├── Controllers
+│   │   │   ├── AuthController.cs
+│   │   │   └── ProductsController.cs
+│   │   │
+│   │   ├── Middleware
+│   │   │   ├── ExceptionMiddleware.cs
+│   │   │   └── SecurityHeadersMiddleware.cs
+│   │   │
+│   │   ├── Program.cs
+│   │   └── appsettings.json
+│   │
+│   ├── Application
+│   │   ├── DTOs
+│   │   ├── Interfaces
+│   │   ├── Mapping
+│   │   ├── Services
+│   │   └── Validators
+│   │
+│   ├── Domain
+│   │   └── Entities
+│   │       ├── Product.cs
+│   │       └── User.cs
+│   │
+│   └── Infrastructure
+│       ├── Data
+│       │   ├── ApplicationDbContext.cs
+│       │   └── Repositories
+│       │       ├── ProductRepository.cs
+│       │       └── UserRepository.cs
+│       │
+│       ├── Identity
+│       │   ├── JwtTokenGenerator.cs
+│       │   └── PasswordHasher.cs
+│       │
+│       └── Migrations
 │
-├── Application
-│   ├── DTOs
-│   ├── Interfaces
-│   ├── Services
-│   ├── Mapping
-│   └── Validators
+├── tests
+│   └── CRNProductAPI.Tests
+│       ├── ApiIntegrationTests.cs
+│       ├── AuthServiceTests.cs
+│       └── ProductServiceTests.cs
 │
-├── Domain
-│   └── Entities
-│
-└── Infrastructure
-    ├── Data
-    ├── Repositories
-    └── Identity
+├── docker-compose.yml
+├── CRNProductAPI.sln
+└── README.md
 
 ## Tech Stack
 
@@ -64,7 +98,7 @@ CRN Product API
 - **Logging:** Serilog
 - **API Documentation:** Swagger / OpenAPI
 - **Containerization:** Docker / Docker Compose
-- **Testing:** xUnit and Moq
+- **Testing:** xUnit, Moq, and WebApplicationFactory
 
 
 ## API Endpoints
@@ -79,14 +113,23 @@ CRN Product API
 
 ### Products
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/Products` | Get all products |
-| GET | `/api/Products/{id}` | Get product by ID |
-| POST | `/api/Products` | Create a new product |
-| PUT | `/api/Products` | Update an existing product |
-| DELETE | `/api/Products/{id}` | Delete a product |
+All product endpoints require JWT authentication.
 
+| Method | Endpoint | Authentication | Description |
+|---|---|---|---|
+| GET | `/api/Products?page=1&pageSize=10` | JWT | Get paginated products |
+| GET | `/api/Products/{id}` | JWT | Get product by ID |
+| POST | `/api/Products` | JWT | Create a new product |
+| PUT | `/api/Products` | JWT | Update an existing product |
+| DELETE | `/api/Products/{id}` | JWT | Delete a product |
+
+
+#### Pagination Parameters
+
+| Parameter | Default | Allowed Range | Description |
+|---|---:|---:|---|
+| `page` | 1 | Greater than 0 | Page number |
+| `pageSize` | 10 | 1 - 100 | Number of products per page |
 
 
 ## Swagger / OpenAPI
@@ -140,11 +183,13 @@ POST /api/Auth/login
   ↓
 Validate email and password
   ↓
+Verify user credentials
+  ↓
 Generate access token
   ↓
 Generate refresh token
   ↓
-Return tokens to client
+Return authentication response
 ```
 
 
@@ -156,13 +201,19 @@ Client
   ↓
 Authorization: Bearer <access_token>
   ↓
-JWT Authentication
+JWT Authentication Middleware
   ↓
 Validate token
   ↓
 Authorize request
   ↓
-Access protected Product APIs
+ProductsController
+  ↓
+Product Service
+  ↓
+Product Repository
+  ↓
+SQL Server
 ```
 
 
@@ -173,6 +224,8 @@ Access token expires
   ↓
 Client sends refresh token
   ↓
+POST /api/Auth/refresh
+  ↓
 Validate refresh token
   ↓
 Check refresh token expiry
@@ -181,10 +234,8 @@ Generate new access token
   ↓
 Generate new refresh token
   ↓
-Rotate refresh token
+Return new authentication response
 ```
-
-
 
 ## Environment Setup
 
@@ -209,23 +260,35 @@ The main configuration includes:
 
 For local development, update the connection string and JWT settings according to your environment.
 
+Do not commit production secrets, passwords, or sensitive credentials to source control.
+
 ### Run the Application
 
-The recommended way to run the application is using Docker Compose:
+The application can be started using Docker Compose.
+
+From the project root directory, run:
 
 ```bash
 docker compose up --build
 ```
 
+After the containers start, the API will be available at:
+
 ```text
 http://localhost:8080
 ```
+
+Swagger UI will be available at:
 
 ```text
 http://localhost:8080/swagger/index.html
 ```
 
+To verify that the containers are running:
 
+```bash
+docker compose ps
+```
 
 ## Docker Setup
 
@@ -233,10 +296,8 @@ The application is containerized using Docker and Docker Compose.
 
 The Docker environment consists of two containers:
 
-- **CRN Product API** — ASP.NET Core Web API
-- **SQL Server** — Microsoft SQL Server 2022
-
-
+- **CRN Product API** — ASP.NET Core Web API container
+- **SQL Server** — Microsoft SQL Server 2022 database container
 
 
 ### Start the Application
@@ -246,6 +307,11 @@ From the project root directory, run:
 ```bash
 docker compose up --build
 ```
+From the project root directory, build the Docker images and start the application using:
+```markdown
+From the project root directory, run:
+```
+
 
 ### Start Without Rebuilding
 
@@ -253,6 +319,12 @@ If no source code or Docker configuration has changed:
 
 ```bash
 docker compose up
+```
+
+If the Docker image is already built and no Docker configuration has changed, start the containers using:
+
+```markdown
+If no source code or Docker configuration has changed:
 ```
 
 ### Stop the Application
@@ -280,7 +352,7 @@ The application can be deployed using Docker Compose.
 1. Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Prathameshmahajan03/CRNProductAPI.git
 ```
 
 2. Navigate to the project directory:
@@ -314,10 +386,9 @@ docker compose down
 ```
 
 
+### Testing
 
-## Testing
-
-The project includes automated unit tests using xUnit and Moq.
+The project includes automated tests using xUnit, Moq, and WebApplicationFactory.
 
 The tests cover:
 
@@ -327,6 +398,8 @@ The tests cover:
 - Product update and delete scenarios
 - User registration and login scenarios
 - Refresh token scenarios
+- API integration testing
+
 
 ### Running Tests
 
